@@ -79,7 +79,7 @@ enum TypesOfVar   {Volt, Amp, Rpm};
 //Variables we can set or get
 bool  reporting     = false;
 bool  Past1second   = false;
-int   currentIDX    = 0;
+int   currentDOM    = 0;
 
 const int MaxDomains = 6;       //{Set   , Read  , SetMin, Min   , SetMax, Max   };
 int   SpeedVar[MaxDomains]      = {0     , 1     , 2     , 3     , 4     , 5     }; //Just an example of some default values to start with
@@ -155,7 +155,7 @@ bool reportHandler(Commander &Cmdr){
 //All Sub commands:
 bool Gen_Sub_Cmds_Handler(Commander &Cmdr){    
     bool    retVal = 0;
-    switch (currentIDX) { 
+    switch (currentDOM) { 
         case Set:          Gen_Param_Cmd.commanderName = "Set";             break;
         case Read:         Gen_Param_Cmd.commanderName = "Actual";          break;
         case SetMin:       Gen_Param_Cmd.commanderName = "Set min limit";   break;
@@ -175,27 +175,27 @@ bool Gen_Sub_Cmds_Handler(Commander &Cmdr){
     return retVal;
 }
 bool setHandler(Commander &Cmdr){
-    currentIDX = Set;   
+    currentDOM = Set;   
     return Gen_Sub_Cmds_Handler(Cmdr);
 }
 bool readHandler(Commander &Cmdr){
-    currentIDX = Read;       
+    currentDOM = Read;       
     return Gen_Sub_Cmds_Handler(Cmdr);
 }
 bool setminHandler(Commander &Cmdr){
-    currentIDX = SetMin;        
+    currentDOM = SetMin;        
     return Gen_Sub_Cmds_Handler(Cmdr);
 }
 bool minHandler(Commander &Cmdr){
-    currentIDX = Min;        
+    currentDOM = Min;        
     return Gen_Sub_Cmds_Handler(Cmdr);
 }
 bool setmaxHandler(Commander &Cmdr){
-    currentIDX = SetMax;       
+    currentDOM = SetMax;       
     return Gen_Sub_Cmds_Handler(Cmdr);
 }
 bool maxHandler(Commander &Cmdr){
-    currentIDX = Max;       
+    currentDOM = Max;       
     return Gen_Sub_Cmds_Handler(Cmdr);
 }
 
@@ -242,46 +242,46 @@ bool VoltVariable(Commander &Cmdr){
     bool retVal = 0;
     float f;
     if (Cmdr.getFloat(f)) {
-        if ((currentIDX == Read)|(currentIDX == Min)|(currentIDX == Max)) {
+        if ((currentDOM == Read)|(currentDOM == Min)|(currentDOM == Max)) {
             Gen_Param_Cmd.print(" => read only value!!!  ");            retVal = 1;
         } else {
-            VoltageVar[currentIDX] = f;
+            VoltageVar[currentDOM] = f;
         }
     }
     Cmdr.print(Units[Volt]);                Cmdr.print(" = ");
-    Cmdr.print(VoltageVar[currentIDX]);     Cmdr.println(" V");
+    Cmdr.print(VoltageVar[currentDOM]);     Cmdr.println(" V");
     return retVal;
 }
 bool AmpVariable(Commander &Cmdr){
     bool retVal = 0;
     float f;
     if (Cmdr.getFloat(f)) {
-        if ((currentIDX == Read)|(currentIDX == Min)|(currentIDX == Max)) {
+        if ((currentDOM == Read)|(currentDOM == Min)|(currentDOM == Max)) {
             Gen_Param_Cmd.print(" => read only value!!!  ");            retVal = 1;
         } else {
-            AmperageVar[currentIDX] = f;
+            AmperageVar[currentDOM] = f;
         }
     }        
     Cmdr.print(Units[Amp]);                 Cmdr.print(" = ");
-    Cmdr.print(AmperageVar[currentIDX]);    Cmdr.println(" A");
+    Cmdr.print(AmperageVar[currentDOM]);    Cmdr.println(" A");
     return retVal;
 }
 bool Speed(Commander &Cmdr){
     bool retVal = 0;
     int i;
     if (Cmdr.getInt(i)) {
-        if ((currentIDX == Read)|(currentIDX == Min)|(currentIDX == Max)) {
+        if ((currentDOM == Read)|(currentDOM == Min)|(currentDOM == Max)) {
             Gen_Param_Cmd.print(" => read only value!!!  ");            retVal = 1;
         } else {
-            SpeedVar[currentIDX] = i;
+            SpeedVar[currentDOM] = i;
         }
     }
     Cmdr.print(Units[Rpm]);                 Cmdr.print(" = ");
-    Cmdr.print(SpeedVar[currentIDX]);       Cmdr.println(" Rpm");
+    Cmdr.print(SpeedVar[currentDOM]);       Cmdr.println(" Rpm");
     return retVal;
 }
 bool DomReset(Commander &Cmdr){
-    VoltageVar[currentIDX] = 0;       AmperageVar[currentIDX] = 0;      SpeedVar[currentIDX] = 0;      
+    VoltageVar[currentDOM] = 0;       AmperageVar[currentDOM] = 0;      SpeedVar[currentDOM] = 0;      
     Cmdr.println(" Values within this domain have been reset to '0'");
     return 0;
 }
